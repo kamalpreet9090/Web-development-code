@@ -1,0 +1,672 @@
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Cadbury | Chocolate World — Extended Project</title>
+  <meta name="description" content="Cadbury Chocolate World — extended multi-section project with products, events, factory tour, reviews, FAQ and gallery." />
+
+  <style>
+    /* === RESET === */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root{
+      --bg-1:#3b006a; --bg-2:#4b0082; --accent:#feca57; --muted:#f0e4ff; --card: rgba(255,255,255,0.08);
+      --glass: rgba(255,255,255,0.06);
+    }
+    body{
+      font-family: 'Poppins', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background: linear-gradient(180deg, var(--bg-1), var(--bg-2), #7b2cbf);
+      color: var(--muted);
+      -webkit-font-smoothing:antialiased;
+      line-height:1.5;
+      scroll-behavior:smooth;
+    }
+
+    /* === LAYOUT & HEADER === */
+    header{
+      position:sticky; top:0; z-index:120; backdrop-filter: blur(6px);
+      background: linear-gradient(90deg, rgba(75,0,130,0.85), rgba(60,0,100,0.7));
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.35);
+      padding: 12px 20px;
+      display:flex; gap:20px; align-items:center; justify-content:space-between;
+    }
+    .brand { display:flex; align-items:center; gap:12px; text-decoration:none; color:var(--muted); }
+    .logo {
+      width:48px; height:48px; border-radius:8px;
+      background: linear-gradient(135deg,#fff3af,#ffd38c);
+      display:flex; align-items:center; justify-content:center; color:#4b0082; font-weight:800;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.35);
+    }
+    nav { display:flex; gap:18px; align-items:center; }
+    nav a { color:var(--muted); text-decoration:none; font-weight:600; padding:8px; transition: all .18s; border-radius:6px;}
+    nav a:hover, nav a:focus { color:#fff; transform:translateY(-2px); background:rgba(255,255,255,0.02); }
+
+    /* === PRINTABLE PAGE SECTIONS ===
+       Each major section will be a printable "page" break for PDF/print output.
+    */
+    .page {
+      min-height: 96vh;
+      padding: 42px 6vw;
+      display:block;
+      page-break-after: always;  /* Print: force page break after each section */
+      break-after: page;
+    }
+
+    /* Header within page */
+    .page .section-header{
+      display:flex; align-items:center; justify-content:space-between; gap:16px;
+      margin-bottom:22px;
+    }
+    .section-header h2 { color:#ffe6a7; font-size:1.9rem; letter-spacing:0.6px; }
+    .section-header p { color: rgba(240,228,255,0.9); max-width:60%; }
+
+    /* === HERO === */
+    .hero{
+      height:78vh;
+      display:flex; align-items:center; gap:36px; justify-content:center; text-align:center; flex-direction:column;
+      background: linear-gradient(rgba(40,0,80,0.7), rgba(60,0,100,0.6)),
+        url('https://images.unsplash.com/photo-1615485290430-62d38e4a1c2f?q=80&w=1400&auto=format&fit=crop') center/cover no-repeat;
+      border-radius:16px; box-shadow: 0 14px 40px rgba(0,0,0,0.45);
+    }
+    .hero h1{ font-size:2.6rem; color:#fff; text-shadow: 2px 4px 18px rgba(0,0,0,0.6); }
+    .hero p{ font-size:1.15rem; color:#f8eefb; margin-top:8px; max-width:900px; }
+
+    .hero .cta {
+      display:inline-flex; gap:10px; align-items:center;
+      margin-top:14px;
+    }
+    .btn {
+      background: linear-gradient(90deg,#ff9f43,#feca57);
+      color:#4b0082; padding:12px 18px; border-radius:28px; font-weight:700; cursor:pointer; border:none;
+      box-shadow: 0 8px 20px rgba(255,160,50,0.14);
+    }
+    .btn.secondary {
+      background: transparent; border:1px solid rgba(255,255,255,0.12); color: #fff;
+    }
+
+    /* === ABOUT / CARDS === */
+    .about {
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.03));
+      border-radius:12px; padding:22px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.32);
+    }
+    .cards { display:flex; gap:18px; margin-top:18px; flex-wrap:wrap; }
+    .card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+      width:260px; padding:18px; border-radius:12px; box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+    }
+    .card h3{ color:var(--accent); margin-bottom:8px; }
+    .card p{ color: rgba(240,228,255,0.9); font-size:0.97rem; line-height:1.45; }
+
+    /* === PRODUCTS / SLIDER === */
+    .products {
+      display:flex; gap:26px; align-items:flex-start; flex-wrap:wrap;
+    }
+    .product-list { display:flex; gap:18px; flex-wrap:wrap; width:66%; }
+    .product { width:220px; border-radius:12px; padding:12px; background:var(--card); box-shadow: 0 8px 20px rgba(0,0,0,0.45); }
+    .product img { width:100%; border-radius:10px; height:140px; object-fit:cover; }
+    .product h4 { color:#fff; margin:8px 0 6px; }
+    .product .price { font-weight:800; color:#ffd89a; }
+    .product .meta { display:flex; justify-content:space-between; align-items:center; margin-top:10px; }
+    .product button { padding:8px 10px; border-radius:10px; border:none; font-weight:700; cursor:pointer; }
+
+    /* slider controls for featured carousel */
+    .featured {
+      width:32%; min-width:320px; border-radius:14px; overflow:hidden; background:var(--glass); padding:8px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.45);
+    }
+    .carousel { position:relative; width:100%; height:280px; border-radius:10px; overflow:hidden; }
+    .carousel img{ width:100%; height:100%; object-fit:cover; display:block; transition: transform .6s ease; }
+    .carousel .controls{ position:absolute; left:0; right:0; bottom:12px; display:flex; justify-content:center; gap:10px; }
+    .dot{ width:10px; height:10px; border-radius:50%; background:rgba(255,255,255,0.35); display:inline-block; cursor:pointer; }
+    .dot.active{ background:var(--accent); transform:scale(1.15); box-shadow: 0 4px 10px rgba(0,0,0,0.6); }
+
+    /* === OFFERS & EVENTS === */
+    .offers-grid { display:grid; grid-template-columns: repeat(auto-fit,minmax(220px,1fr)); gap:14px; margin-top:18px; }
+    .offer { padding:14px; border-radius:12px; background:linear-gradient(135deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02)); }
+    .offer h4{ color:#fff; margin-bottom:6px; }
+    .banner { margin-top:12px; padding:16px; border-radius:12px; background: linear-gradient(90deg,#dfe7ff33,#ffd8a833); color:#2b0033; font-weight:800; }
+
+    /* === FACTORY TIMELINE === */
+    .timeline { display:flex; gap:18px; flex-direction:column; margin-top:8px; }
+    .timeline .step { display:flex; gap:12px; align-items:flex-start; background:var(--card); padding:14px; border-radius:10px; }
+    .step .num { width:44px; height:44px; border-radius:10px; background:#ffe6a7; color:#4b0082; display:flex; align-items:center; justify-content:center; font-weight:800; }
+    .step p { color:rgba(240,228,255,0.95); }
+
+    /* === REVIEWS CAROUSEL === */
+    .reviews { display:flex; gap:18px; align-items:center; }
+    .review-card { padding:16px; border-radius:12px; width:320px; background:var(--card); box-shadow: 0 12px 30px rgba(0,0,0,0.45); }
+    .stars { color:#ffd36b; margin-bottom:8px; }
+
+    /* === FAQ ACCORDION === */
+    .faq .item { background:var(--card); padding:12px; border-radius:10px; margin-bottom:10px; }
+    .faq button { width:100%; text-align:left; background:transparent; border:none; padding:8px; font-weight:700; color: #fff; cursor:pointer; }
+    .faq .answer { margin-top:8px; color:rgba(240,228,255,0.9); display:none; }
+
+    /* === GALLERY === */
+    .gallery-grid { display:grid; grid-template-columns: repeat(auto-fit,minmax(160px,1fr)); gap:10px; margin-top:12px; }
+    .gallery-grid img { width:100%; height:140px; object-fit:cover; border-radius:8px; cursor:pointer; }
+
+    /* === CONTACT & ORDER === */
+    .contact-card { max-width:700px; margin:0 auto; padding:18px; border-radius:14px; background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02)); }
+    form .row { display:flex; gap:10px; }
+    input, textarea, select { padding:10px; border-radius:8px; border:none; width:100%; background:#fffdf8; color:#4b0082; font-weight:600; }
+    label { display:block; font-size:0.9rem; margin-bottom:6px; color:rgba(240,228,255,0.9); }
+
+    /* === FOOTER === */
+    footer { text-align:center; padding:18px 20px; color:#fff; background:linear-gradient(90deg, rgba(75,0,130,0.9), rgba(60,0,100,0.9)); }
+
+    /* === MODAL === */
+    .modal {
+      position:fixed; inset:0; background:rgba(0,0,0,0.6); display:none; justify-content:center; align-items:center; z-index:220;
+    }
+    .modal .dialog{ background:#fff; color:#4b0082; padding:18px; border-radius:12px; width:420px; max-width:92%; }
+
+    /* === RESPONSIVE === */
+    @media (max-width:1000px){
+      .products { flex-direction:column; }
+      .product-list, .featured { width:100%; }
+      .hero{ height:56vh; padding:18px; }
+      .page{ padding:28px 4vw; }
+    }
+
+    @media print {
+      header, nav, .btn, .carousel .controls, footer { display:none !important; }
+      .page { page-break-after: always; break-after: page; box-shadow:none; background:none; }
+    }
+
+    /* small helper */
+    .muted { color: rgba(240,228,255,0.75); font-size:0.95rem; }
+    .flex { display:flex; gap:10px; align-items:center; }
+  </style>
+</head>
+<body>
+
+  <!-- TOP NAV -->
+  <header aria-label="Main header">
+    <a class="brand" href="#home" title="Cadbury Chocolate World">
+      <div class="logo" aria-hidden="true">C</div>
+      <div>
+        <div style="font-weight:800; font-size:1.05rem; color:#fff">Cadbury Chocolate World</div>
+        <div style="font-size:0.78rem; color:rgba(255,255,255,0.8)">Project — Extended</div>
+      </div>
+    </a>
+
+    <nav aria-label="Primary navigation">
+      <a href="#home">Home</a>
+      <a href="#products">Products</a>
+      <a href="#offers">Offers</a>
+      <a href="#factory">Factory</a>
+      <a href="#reviews">Reviews</a>
+      <a href="#faq">FAQ</a>
+      <a href="#gallery">Gallery</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <!-- PAGE 1: HOME / INTRO (print page 1) -->
+  <section id="home" class="page">
+    <div class="hero" role="region" aria-label="Hero">
+      <h1>Indulge in the Joy of Cadbury</h1>
+      <p>Delightful chocolate, community stories, factory tours, festival offers, and a small ordering demo.</p>
+      <div class="cta">
+        <a href="#products" class="btn" role="button">Explore Products</a>
+        <a href="#contact" class="btn secondary" role="button">Submission Info</a>
+      </div>
+    </div>
+
+    <div style="margin-top:20px" class="about">
+      <div class="section-header">
+        <h2>Our Sweet Story</h2>
+        <p class="muted">Cadbury has been spreading smiles since 1824. This extended project adds product listings, factory tour, event offers, customer reviews, FAQ and a gallery .</p>
+      </div>
+
+      <div class="cards" aria-hidden="false">
+        <div class="card">
+          <h3>Our Legacy</h3>
+          <p>Over two centuries of crafting creamy chocolate — combining tradition, quality sourcing, and modern techniques to bring joy worldwide.</p>
+        </div>
+        <div class="card">
+          <h3>Our Mission</h3>
+          <p>To make the world a happier place by sharing the joy of chocolate with everyone — ethically sourced and lovingly made.</p>
+        </div>
+        <div class="card">
+          <h3>Our Products</h3>
+          <p>From Dairy Milk and Silk to special edition festival boxes, each product is crafted for taste and texture that melts hearts.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PAGE 2: PRODUCTS (print page 2) -->
+  <section id="products" class="page" aria-labelledby="products-heading">
+    <div class="section-header">
+      <h2 id="products-heading">Products & Featured</h2>
+      <p class="muted">A selection of popular chocolates and gift packs. Use the "Buy" buttons to add items to the small cart demo at the bottom of this page.</p>
+    </div>
+
+    <div class="products">
+      <!-- FEATURED CAROUSEL -->
+      <aside class="featured" aria-label="Featured products">
+        <div class="carousel" id="carousel">
+          <img src="https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=1400&auto=format&fit=crop" alt="Featured chocolate 1" />
+          <img src="https://images.unsplash.com/photo-1505852679233-d9fd70aff56d?q=80&w=1400&auto=format&fit=crop" alt="Featured chocolate 2" style="display:none" />
+          <img src="https://images.unsplash.com/photo-1617191513344-84c5f3c2f7d7?q=80&w=1400&auto=format&fit=crop" alt="Featured chocolate 3" style="display:none" />
+        </div>
+        <div class="controls" style="text-align:center; padding:8px;">
+          <div id="dots" style="display:flex; justify-content:center; gap:8px; margin-top:8px;">
+            <span class="dot active" data-index="0" aria-label="Slide 1"></span>
+            <span class="dot" data-index="1" aria-label="Slide 2"></span>
+            <span class="dot" data-index="2" aria-label="Slide 3"></span>
+          </div>
+        </div>
+        <div style="padding:8px; margin-top:8px; color:#fff;">
+          <strong>Featured: Silk Collection</strong>
+          <p class="muted" style="margin-top:6px">Creamy, silky texture in limited edition gift boxes — perfect for festivals and gifts.</p>
+        </div>
+      </aside>
+
+      <!-- PRODUCT LIST -->
+      <div class="product-list" aria-live="polite">
+        <!-- PRODUCT ITEM EXAMPLES -->
+        <div class="product" data-id="dm-01" data-price="35">
+          <img src="https://images.unsplash.com/photo-1543332164-3f7c7bf6f4b7?q=80&w=800&auto=format&fit=crop" alt="Dairy Milk" />
+          <h4>Dairy Milk 60g</h4>
+          <div class="muted">Classic milk chocolate</div>
+          <div class="meta">
+            <div class="price">₹35</div>
+            <button class="btn" onclick="addToCart('Dairy Milk 60g',35)">Buy</button>
+          </div>
+        </div>
+
+        <div class="product" data-id="silk-01" data-price="120">
+          <img src="https://images.unsplash.com/photo-1599789197514-3c6d9ecf1f39?q=80&w=800&auto=format&fit=crop" alt="Cadbury Silk" />
+          <h4>Cadbury Silk 80g</h4>
+          <div class="muted">Silky smooth - premium</div>
+          <div class="meta">
+            <div class="price">₹120</div>
+            <button class="btn" onclick="addToCart('Cadbury Silk 80g',120)">Buy</button>
+          </div>
+        </div>
+
+        <div class="product" data-id="oreo-01" data-price="90">
+          <img src="https://images.unsplash.com/photo-1621885155172-dc2d670f9ff7?q=80&w=800&auto=format&fit=crop" alt="Oreo Chocolate" />
+          <h4>Dairy Milk Oreo 50g</h4>
+          <div class="muted">Chocolate meets cookie crunch</div>
+          <div class="meta">
+            <div class="price">₹90</div>
+            <button class="btn" onclick="addToCart('Dairy Milk Oreo 50g',90)">Buy</button>
+          </div>
+        </div>
+
+        <div class="product" data-id="gift-01" data-price="399">
+          <img src="https://images.unsplash.com/photo-1604908176962-197ebca8ddc6?q=80&w=1200&auto=format&fit=crop" alt="Gift Pack" />
+          <h4>Festival Gift Box</h4>
+          <div class="muted">Curated assortment — limited edition</div>
+          <div class="meta">
+            <div class="price">₹399</div>
+            <button class="btn" onclick="addToCart('Festival Gift Box',399)">Buy</button>
+          </div>
+        </div>
+
+        <div class="product" data-id="mini-01" data-price="20">
+          <img src="https://images.unsplash.com/photo-1548337963-2f8a0b50a412?q=80&w=800&auto=format&fit=crop" alt="Mini bar" />
+          <h4>Mini Chocolate</h4>
+          <div class="muted">Snack-sized treats</div>
+          <div class="meta">
+            <div class="price">₹20</div>
+            <button class="btn" onclick="addToCart('Mini Chocolate',20)">Buy</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CART SUMMARY -->
+    <div style="margin-top:18px; display:flex; gap:12px; align-items:flex-start; flex-wrap:wrap;">
+      <div style="flex:1 1 360px; background:var(--card); padding:14px; border-radius:12px;">
+        <h3 style="color:var(--accent)">Cart</h3>
+        <div id="cart-items" class="muted">No items in cart.</div>
+        <div style="margin-top:10px; display:flex; gap:10px; align-items:center;">
+          <div style="font-weight:800; font-size:1.1rem">Total: <span id="cart-total">₹0</span></div>
+          <button class="btn" style="margin-left:auto" onclick="checkout()">Checkout</button>
+        </div>
+      </div>
+
+      <div style="flex:1 1 320px; background:var(--glass); padding:14px; border-radius:12px;">
+        <h3 style="color:var(--accent)">Order Notes</h3>
+        <p class="muted">This demo showcases a simple add-to-cart + checkout alert. For a real project, replace checkout() with form submission or API call.</p>
+        <ul class="muted" style="margin-top:8px; line-height:1.6;">
+          <li>Click Buy to add items</li>
+          <li>Cart totals update automatically</li>
+          <li>Print the page to produce separate printed pages for each section</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- PAGE 3: OFFERS & FACTORY (print page 3) -->
+  <section id="offers" class="page">
+    <div class="section-header">
+      <h2>Events & Offers</h2>
+      <p class="muted">Seasonal discounts, birthday packs and festival boxes.</p>
+    </div>
+
+    <div class="offers-grid">
+      <div class="offer">
+        <h4>Buy 2 Get 1 Free</h4>
+        <p class="muted">Applicable on Mini Chocolates from 1st–10th December 2025.</p>
+        <div class="banner">Limited Time: Use code <strong>CANDYJOY</strong></div>
+      </div>
+      <div class="offer">
+        <h4>Festival Gift Discount</h4>
+        <p class="muted">₹50 off on festival gift box (min order ₹300).</p>
+        <div class="banner">Special Pricing for Students</div>
+      </div>
+      <div class="offer">
+        <h4>Birthday Packs</h4>
+        <p class="muted">Customizable birthday pack — choose 6 bars and we wrap them for free.</p>
+        <div class="banner">Free Gift Wrap</div>
+      </div>
+    </div>
+
+    <div style="margin-top:22px" class="section-header">
+      <h2>Factory Visit & Manufacturing</h2>
+      <p class="muted">An overview of how chocolate is made.</p>
+    </div>
+
+    <div class="timeline" aria-label="Factory timeline">
+      <div class="step">
+        <div class="num">1</div>
+        <div><strong>Bean Sourcing</strong><p>High-quality cocoa beans are ethically sourced from certified farms and checked for quality.</p></div>
+      </div>
+      <div class="step">
+        <div class="num">2</div>
+        <div><strong>Roasting & Grinding</strong><p>Beans are roasted and ground to release rich cocoa flavor.</p></div>
+      </div>
+      <div class="step">
+        <div class="num">3</div>
+        <div><strong>Mixing & Conching</strong><p>Milk, sugar and cocoa are gently mixed and conched to achieve a smooth texture.</p></div>
+      </div>
+      <div class="step">
+        <div class="num">4</div>
+        <div><strong>Tempering & Molding</strong><p>Chocolate is tempered for shine and snap, then poured into molds for final shape.</p></div>
+      </div>
+      <div class="step">
+        <div class="num">5</div>
+        <div><strong>Packing & Quality</strong><p>Each pack is inspected, wrapped and prepared for distribution with safety standards.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PAGE 4: REVIEWS & FAQ (print page 4) -->
+  <section id="reviews" class="page">
+    <div class="section-header">
+      <h2>Customer Reviews</h2>
+      <p class="muted">Real tasting feedback helps in product development. This carousel rotates user testimonials.</p>
+    </div>
+
+    <div class="reviews" aria-live="polite">
+      <div class="review-card" id="review-1">
+        <div class="stars">★★★★★</div>
+        <h4>Lovely texture & taste</h4>
+        <p class="muted">"Cadbury Silk is the perfect smooth treat — my family loved the festival box!" —Kamalpreet M.</p>
+      </div>
+      <div class="review-card" id="review-2" style="display:none">
+        <div class="stars">★★★★☆</div>
+        <h4>Great for gifting</h4>
+        <p class="muted">"The gift pack made my birthday present feel special. Packaging is excellent." — Rajwant S.</p>
+      </div>
+      <div class="review-card" id="review-3" style="display:none">
+        <div class="stars">★★★★★</div>
+        <h4>Kid friendly</h4>
+        <p class="muted">"Mini chocolate bites are always a hit at parties. Quick delivery too." — Priya M.</p>
+      </div>
+    </div>
+
+    <div class="section-header" style="margin-top:18px">
+      <h2 id="faq">FAQ</h2>
+      <p class="muted">Frequently asked questions.</p>
+    </div>
+
+    <div class="faq" role="region" aria-label="Frequently asked questions">
+      <div class="item">
+        <button aria-expanded="false" onclick="toggleFAQ(this)">What are the ingredients?</button>
+        <div class="answer">Typical ingredients include cocoa solids, milk powder, sugar and emulsifiers. Specific ingredients vary by product — check the label on each pack.</div>
+      </div>
+      <div class="item">
+        <button aria-expanded="false" onclick="toggleFAQ(this)">Do you offer factory visits?</button>
+        <div class="answer">Factory visits are available to educational groups by appointment. Contact the team via the Contact section for booking details.</div>
+      </div>
+      <div class="item">
+        <button aria-expanded="false" onclick="toggleFAQ(this)">Is there a student discount?</button>
+        <div class="answer">Student discounts are available during selected offers — shown in the Offers section above.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PAGE 5: GALLERY & CONTACT (print page 5) -->
+  <section id="gallery" class="page">
+    <div class="section-header">
+      <h2>Gallery</h2>
+      <p class="muted">A curated selection of images showing products, packaging and factory scenes. Click to enlarge (lightbox).</p>
+    </div>
+
+    <div class="gallery-grid" id="gallery-grid">
+      <img src="https://images.unsplash.com/photo-1606851090113-3b7a9a1d4f76?q=80&w=1200&auto=format&fit=crop" alt="Chocolate closeup" onclick="openLightbox(this.src, this.alt)" />
+      <img src="https://images.unsplash.com/photo-1589308078051-1f3c4b0e83ca?q=80&w=1200&auto=format&fit=crop" alt="Packaging line" onclick="openLightbox(this.src, this.alt)" />
+      <img src="https://images.unsplash.com/photo-1605460375648-278bcbd579a6?q=80&w=1200&auto=format&fit=crop" alt="Factory workers" onclick="openLightbox(this.src, this.alt)" />
+      <img src="https://images.unsplash.com/photo-1551024601-bec78aea704b?q=80&w=1200&auto=format&fit=crop" alt="Gift boxes" onclick="openLightbox(this.src, this.alt)" />
+      <img src="https://images.unsplash.com/photo-1597308691408-6fb29f5c8f9b?q=80&w=1200&auto=format&fit=crop" alt="Chocolate bars" onclick="openLightbox(this.src, this.alt)" />
+      <img src="https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=1200&auto=format&fit=crop" alt="Assorted chocolates" onclick="openLightbox(this.src, this.alt)" />
+    </div>
+
+    <!-- CONTACT -->
+    <div style="margin-top:20px" class="section-header">
+      <h2>Contact Us</h2>
+      <p class="muted">Use the contact form below for questions about factory visits, offers, or academic project queries.</p>
+    </div>
+
+    <div class="contact-card">
+      <form id="contact-form" onsubmit="submitContact(event)">
+        <div style="display:flex; gap:12px; flex-wrap:wrap;">
+          <div style="flex:1 1 220px;">
+            <label for="name">Your Name</label>
+            <input id="name" type="text" required placeholder="e.g., Aman" />
+          </div>
+          <div style="flex:1 1 220px;">
+            <label for="email">Email</label>
+            <input id="email" type="email" required placeholder="email@example.com" />
+          </div>
+        </div>
+
+        <div style="margin-top:10px;">
+          <label for="subject">Subject</label>
+          <input id="subject" type="text" placeholder="Subject" />
+        </div>
+
+        <div style="margin-top:10px;">
+          <label for="message">Message</label>
+          <textarea id="message" rows="5" placeholder="Write your message..." ></textarea>
+        </div>
+
+        <div style="display:flex; gap:10px; margin-top:12px; align-items:center;">
+          <button class="btn" type="submit">Send Message</button>
+          
+          <div class="muted" style="margin-left:auto">© 2025 Cadbury Chocolate | Project</div>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <footer>
+    <small>Made with 🍫 and 💜 </small>
+  </footer>
+
+  <!-- LIGHTBOX MODAL -->
+  <div class="modal" id="lightbox" role="dialog" aria-hidden="true" onclick="closeLightbox()">
+    <div class="dialog" onclick="event.stopPropagation()">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <strong id="lb-title">Image</strong>
+        <button class="btn secondary" onclick="closeLightbox()">Close</button>
+      </div>
+      <div style="margin-top:10px">
+        <img id="lb-img" src="" alt="" style="width:100%; border-radius:8px; max-height:60vh; object-fit:contain;" />
+      </div>
+    </div>
+  </div>
+
+  <!-- SIMPLE MODAL FOR CHECKOUT -->
+  <div class="modal" id="modal-checkout" aria-hidden="true">
+    <div class="dialog">
+      <h3>Order Summary</h3>
+      <div id="modal-body" style="margin-top:8px"></div>
+      <div style="display:flex; gap:8px; margin-top:12px; justify-content:flex-end;">
+        <button class="btn" onclick="confirmOrder()">Confirm</button>
+        <button class="btn secondary" onclick="closeModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* ---------- Featured carousel logic ---------- */
+    (function(){
+      const carousel = document.getElementById('carousel');
+      const slides = Array.from(carousel.querySelectorAll('img'));
+      const dots = Array.from(document.querySelectorAll('.dot'));
+      let idx = 0;
+      function show(i){
+        slides.forEach((s,sn)=> s.style.display = sn===i ? 'block' : 'none');
+        dots.forEach((d,di)=> d.classList.toggle('active', di===i));
+        idx = i;
+      }
+      dots.forEach(dot => dot.addEventListener('click', ()=> show(Number(dot.dataset.index))));
+      function next(){
+        show((idx+1) % slides.length);
+      }
+      show(0);
+      let t = setInterval(next, 4000);
+      carousel.addEventListener('mouseenter', ()=> clearInterval(t));
+      carousel.addEventListener('mouseleave', ()=> t = setInterval(next, 4000));
+    })();
+
+    /* ---------- Reviews rotating carousel ---------- */
+    (function(){
+      const revs = [ 'review-1','review-2','review-3' ];
+      let r=0;
+      function showReview(i){
+        revs.forEach((id, idx)=> document.getElementById(id).style.display = idx===i ? 'block' : 'none');
+      }
+      showReview(0);
+      setInterval(()=> { r = (r+1) % revs.length; showReview(r); }, 4500);
+    })();
+
+    /* ---------- FAQ toggle ---------- */
+    function toggleFAQ(btn){
+      const parent = btn.parentElement;
+      const answer = parent.querySelector('.answer');
+      const expanded = btn.getAttribute('aria-expanded') === 'true';
+      btn.setAttribute('aria-expanded', !expanded);
+      answer.style.display = expanded ? 'none' : 'block';
+    }
+
+    /* ---------- Lightbox ---------- */
+    function openLightbox(src, alt){
+      document.getElementById('lb-img').src = src;
+      document.getElementById('lb-img').alt = alt;
+      document.getElementById('lb-title').textContent = alt || 'Image';
+      const lb = document.getElementById('lightbox');
+      lb.style.display = 'flex'; lb.setAttribute('aria-hidden','false');
+    }
+    function closeLightbox(){
+      const lb = document.getElementById('lightbox');
+      lb.style.display = 'none'; lb.setAttribute('aria-hidden','true');
+    }
+
+    /* ---------- Simple cart implementation ---------- */
+    const CART = [];
+    function addToCart(name, price){
+      CART.push({name, price});
+      renderCart();
+      // small feedback
+      const cartEl = document.getElementById('cart-items');
+      cartEl.style.color = '#fff';
+    }
+    function renderCart(){
+      const el = document.getElementById('cart-items');
+      if(CART.length === 0){ el.textContent = 'No items in cart.'; document.getElementById('cart-total').textContent = '₹0'; return; }
+      el.innerHTML = '';
+      const ul = document.createElement('ul');
+      ul.style.listStyle = 'none';
+      ul.style.padding = 0;
+      let total = 0;
+      CART.forEach((it, idx) => {
+        const li = document.createElement('li');
+        li.style.marginBottom = '6px';
+        li.innerHTML = `${it.name} — ₹${it.price} <button style="margin-left:10px;padding:4px 8px;border-radius:6px;border:none;cursor:pointer" onclick="removeItem(${idx})">Remove</button>`;
+        ul.appendChild(li);
+        total += Number(it.price);
+      });
+      el.appendChild(ul);
+      document.getElementById('cart-total').textContent = '₹' + total;
+    }
+    function removeItem(index){
+      CART.splice(index,1);
+      renderCart();
+    }
+
+    /* ---------- Checkout flow (simple modal) ---------- */
+    function checkout(){
+      if(CART.length === 0){ alert('Your cart is empty. Add items before checkout.'); return; }
+      const body = document.getElementById('modal-body');
+      let total = 0;
+      body.innerHTML = '<ul style="list-style:none;padding:0"></ul>';
+      const ul = body.querySelector('ul');
+      CART.forEach(it => { ul.innerHTML += `<li style="margin-bottom:6px">${it.name} — ₹${it.price}</li>`; total += Number(it.price); });
+      ul.innerHTML += `<li style="margin-top:8px;font-weight:800">Total: ₹${total}</li>`;
+      const modal = document.getElementById('modal-checkout');
+      modal.style.display = 'flex'; modal.setAttribute('aria-hidden','false');
+    }
+    function closeModal(){ const m = document.getElementById('modal-checkout'); m.style.display='none'; m.setAttribute('aria-hidden','true'); }
+    function confirmOrder(){
+      closeModal();
+      alert('Order confirmed! (Demo) — Thank you for using this project site.');
+      CART.length = 0;
+      renderCart();
+    }
+
+    /* ---------- Contact form ---------- */
+    function submitContact(e){
+      e.preventDefault();
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const subject = document.getElementById('subject').value.trim();
+      const message = document.getElementById('message').value.trim();
+      if(!name || !email){ alert('Please provide name and email.'); return; }
+      // Demo: show a success message
+      alert('Thanks ' + name + '! Your message was received. (Demo only)');
+      document.getElementById('contact-form').reset();
+    }
+
+    /* ---------- Utility: simple accessibility focus outline for keyboard users ---------- */
+    (function(){
+      function handleFirstTab(e){
+        if(e.key === 'Tab'){
+          document.documentElement.classList.add('show-focus');
+          window.removeEventListener('keydown', handleFirstTab);
+        }
+      }
+      window.addEventListener('keydown', handleFirstTab);
+    })();
+  </script>
+</body>
+</html>
+
+
+
+
+
+
